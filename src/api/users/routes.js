@@ -21,7 +21,7 @@ const routes = (handler) => [
   },
   {
     method: 'POST',
-    path: '/logout',
+    path: '/users/logout',
     handler: handler.logoutUserHandler,
   },
 ];

@@ -26,3 +26,8 @@ coverage/
 
 # Misc
 *.log
+
+home.html
+index.html
+landing.html
+login.html
