@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const { default: autoBind } = require('auto-bind');
 
 class TransactionsHandler {
@@ -11,15 +12,16 @@ class TransactionsHandler {
   async postTransactionsHandler(request, h) {
     this._validator.validateTransactionsPayload(request.payload);
 
-    const { type, nominal, notes, tanggal } = request.payload;
-    const { id: userId } = request.auth.credentials;
+    const { type, amount, notes, transaction_date } = request.payload;
+    // Ambil profile_id dari JWT (sub)
+    const profile_id = request.auth.credentials.sub;
 
     const transactionsId = await this._service.addTransactions({
-      userId,
+      profile_id,
       type,
-      nominal,
+      amount,
       notes,
-      tanggal,
+      transaction_date,
     });
 
     const response = h.response({
@@ -85,14 +87,15 @@ class TransactionsHandler {
     this._validator.validateTransactionsPayload(request.payload);
 
     const { id } = request.params;
-    const { id: userId } = request.auth.credentials;
-    const { type, nominal, notes, tanggal } = request.payload;
+    const { id: userId, sub: profile_id } = request.auth.credentials;
+    const { type, amount, notes, transaction_date } = request.payload;
 
     await this._service.editTransactionsById(id, userId, {
+      profile_id,
       type,
-      nominal,
+      amount,
       notes,
-      tanggal,
+      transaction_date,
     });
 
     return {

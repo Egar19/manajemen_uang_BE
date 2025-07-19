@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const supabase = require('../config/SupabaseConfig');
 const InvariantError = require('../exceptions/InvariantError');
 const NotFoundError = require('../exceptions/NotFoundError');
@@ -9,18 +10,15 @@ class TransactionsService {
   }
 
   // eslint-disable-next-line camelcase
-  async addTransactions({ profileId, type, amount, notes, transaction_date }) {
-    // eslint-disable-next-line camelcase
+  async addTransactions({ profile_id, type, amount, notes, transaction_date }) {
     validateTransactionsPayload({ type, amount, notes, transaction_date });
     const { data, error } = await supabase
       .from(this._table)
       .insert({
-        // eslint-disable-next-line camelcase
-        profile_id: profileId,
+        profile_id,
         type,
         amount,
         notes,
-        // eslint-disable-next-line camelcase
         transaction_date,
       })
       .select()
@@ -76,20 +74,18 @@ class TransactionsService {
   }
 
   // eslint-disable-next-line camelcase
-  async editTransactionsById(id, profileId, { type, amount, notes, transaction_date }) {
+  async editTransactionsById(id, profile_id, { type, amount, notes, transaction_date }) {
     const { data, error } = await supabase
       .from(this._table)
       .update({
         type,
         amount,
         notes,
-        // eslint-disable-next-line camelcase
         transaction_date,
-        // eslint-disable-next-line camelcase
         inserted_at: new Date().toISOString(),
       })
       .eq('id', id)
-      .eq('profile_id', profileId)
+      .eq('profile_id', profile_id)
       .select()
       .single();
 

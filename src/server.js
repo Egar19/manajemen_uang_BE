@@ -13,7 +13,6 @@ const TransactionsValidator = require('./validator/transactions');
 
 // eslint-disable-next-line no-unused-vars
 const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
 
 const init = async () => {
   const usersService = new UsersService();
@@ -29,35 +28,18 @@ const init = async () => {
     },
   });
 
-  // Register hapi-auth-jwt2
   await server.register(require('hapi-auth-jwt2'));
-
-  // Konfigurasi JWKS Supabase
-  const client = jwksClient({
-    jwksUri: `https://${process.env.SUPABASE_PROJECT_ID}.supabase.co/auth/v1/keys`,
-  });
-
-  const getKey = (header, callback) => {
-    client.getSigningKey(header.kid, (err, key) => {
-      const signingKey = key.publicKey || key.rsaPublicKey;
-      callback(null, signingKey);
-    });
-  };
-
   // eslint-disable-next-line no-unused-vars
   const validate = async (decoded, request, h) => {
-    // Anda bisa menambah validasi user di sini jika perlu
+    console.log('JWT Decoded:', decoded);
     return { isValid: true, credentials: decoded };
   };
 
   server.auth.strategy('supabase_jwt', 'jwt', {
-    key: getKey,
+    key: process.env.SUPABASE_JWT_PUBLIC_KEY.replace(/\\n/g, '\n'),
     validate,
-    verifyOptions: { algorithms: ['RS256'] },
+    verifyOptions: { algorithms: ['ES256'] },
   });
-
-  // (Opsional) Set default auth strategy jika ingin semua route terproteksi
-  // server.auth.default('supabase_jwt');
 
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;
