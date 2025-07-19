@@ -53,7 +53,6 @@ class UsersService {
       }
 
       if (data && data.user && data.session) {
-        console.log('Login berhasil:', data);
         return {
           user: data.user,
           session: data.session
