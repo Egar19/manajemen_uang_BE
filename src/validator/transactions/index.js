@@ -7,7 +7,13 @@ const TransactionsValidator = {
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);
     }
-  }
+  },
+  validateTransactionsParams: (params) => {
+    const validationResult = schema.TransactionsParamsSchema.validate(params);
+    if (validationResult.error) {
+      throw new InvariantError(validationResult.error.message);
+    }
+  },
 };
 
 module.exports = TransactionsValidator;

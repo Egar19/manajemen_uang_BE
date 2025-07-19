@@ -9,4 +9,8 @@ const TransactionsPayloadSchema = Joi.object({
   profileId: Joi.string().uuid().optional(),
 });
 
-module.exports = { TransactionsPayloadSchema };
+const TransactionsParamsSchema = Joi.object({
+  id: Joi.string().required(),
+});
+
+module.exports = { TransactionsPayloadSchema, TransactionsParamsSchema };

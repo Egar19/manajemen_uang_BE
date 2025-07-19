@@ -31,7 +31,6 @@ const init = async () => {
   await server.register(require('hapi-auth-jwt2'));
   // eslint-disable-next-line no-unused-vars
   const validate = async (decoded, request, h) => {
-    console.log('JWT Decoded:', decoded);
     return { isValid: true, credentials: decoded };
   };
 

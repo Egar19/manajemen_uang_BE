@@ -31,11 +31,11 @@ class TransactionsService {
     return data.id;
   }
 
-  async getTransactions({ profileId, type, startDate, endDate, limit = 20, offset = 0 }) {
+  async getTransactions({ profile_id, type, startDate, endDate, limit = 20, offset = 0 }) {
     let query = supabase
       .from(this._table)
       .select('*')
-      .eq('profile_id', profileId)
+      .eq('profile_id', profile_id)
       .order('transaction_date', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -58,12 +58,12 @@ class TransactionsService {
     return data;
   }
 
-  async getTransactionsById(id, profileId) {
+  async getTransactionsById(id, profile_id) {
     const { data, error } = await supabase
       .from(this._table)
       .select('*')
       .eq('id', id)
-      .eq('profile_id', profileId)
+      .eq('profile_id', profile_id)
       .single();
 
     if (error || !data) {
@@ -96,12 +96,12 @@ class TransactionsService {
     return data;
   }
 
-  async deleteTransactionsById(id, profileId) {
+  async deleteTransactionsById(id, profile_id) {
     const { data, error } = await supabase
       .from(this._table)
       .delete()
       .eq('id', id)
-      .eq('profile_id', profileId)
+      .eq('profile_id', profile_id)
       .select()
       .single();
 
@@ -110,11 +110,11 @@ class TransactionsService {
     }
   }
 
-  async getSummary(profileId, { startDate, endDate }) {
+  async getSummary(profile_id, { startDate, endDate }) {
     let query = supabase
       .from(this._table)
       .select('type, amount')
-      .eq('profile_id', profileId);
+      .eq('profile_id', profile_id);
 
     if (startDate) {
       query = query.gte('transaction_date', startDate);

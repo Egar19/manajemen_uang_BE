@@ -13,7 +13,6 @@ class TransactionsHandler {
     this._validator.validateTransactionsPayload(request.payload);
 
     const { type, amount, notes, transaction_date } = request.payload;
-    // Ambil profile_id dari JWT (sub)
     const profile_id = request.auth.credentials.sub;
 
     const transactionsId = await this._service.addTransactions({
@@ -36,11 +35,11 @@ class TransactionsHandler {
   }
 
   async getTransactionsHandler(request) {
-    const { id: userId } = request.auth.credentials;
+    const profile_id = request.auth.credentials.sub;
     const { type, startDate, endDate, limit = '20', offset = '0' } = request.query;
 
     const transactions = await this._service.getTransactions({
-      userId,
+      profile_id,
       type,
       startDate,
       endDate,
@@ -70,9 +69,9 @@ class TransactionsHandler {
     this._validator.validateTransactionsParams(request.params);
 
     const { id } = request.params;
-    const { id: userId } = request.auth.credentials;
+    const profile_id = request.auth.credentials.sub;
 
-    const transactions = await this._service.getTransactionsById(id, userId);
+    const transactions = await this._service.getTransactionsById(id, profile_id);
 
     return {
       status: 'success',
@@ -87,10 +86,10 @@ class TransactionsHandler {
     this._validator.validateTransactionsPayload(request.payload);
 
     const { id } = request.params;
-    const { id: userId, sub: profile_id } = request.auth.credentials;
+    const profile_id = request.auth.credentials.sub;
     const { type, amount, notes, transaction_date } = request.payload;
 
-    await this._service.editTransactionsById(id, userId, {
+    await this._service.editTransactionsById(id, profile_id, {
       profile_id,
       type,
       amount,
@@ -108,9 +107,9 @@ class TransactionsHandler {
     this._validator.validateTransactionsParams(request.params);
 
     const { id } = request.params;
-    const { id: userId } = request.auth.credentials;
+    const profile_id = request.auth.credentials.sub;
 
-    await this._service.deleteTransactionsById(id, userId);
+    await this._service.deleteTransactionsById(id, profile_id);
 
     return {
       status: 'success',
@@ -119,10 +118,11 @@ class TransactionsHandler {
   }
 
   async getTransactionsSummaryHandler(request) {
-    const { id: userId } = request.auth.credentials;
+
+    const profile_id = request.auth.credentials.sub;
     const { startDate, endDate } = request.query;
 
-    const summary = await this._service.getSummary(userId, {
+    const summary = await this._service.getSummary(profile_id, {
       startDate,
       endDate,
     });
