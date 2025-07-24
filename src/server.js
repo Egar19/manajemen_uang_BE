@@ -19,8 +19,8 @@ const init = async () => {
   const transactionsService = new TransactionsService();
 
   const server = Hapi.server({
-    port: process.env.PORT,
-    host: process.env.HOST,
+    port: process.env.PORT || 5000,
+    host: '0.0.0.0',
     routes: {
       cors: {
         origin: ['*'],
