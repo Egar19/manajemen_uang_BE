@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const { default: autoBind } = require('auto-bind');
+const autoBind = require('auto-bind');
 
 class TransactionsHandler {
   constructor(service, validator) {
